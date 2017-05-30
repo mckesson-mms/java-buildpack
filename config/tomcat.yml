@@ -35,7 +35,7 @@ access_logging_support:
   access_logging: disabled
 redis_store:
   version: 1.+
-  repository_root: "{default.repository.root}/redis-store"
+  repository_root: "https://repo.spring.io/release/com.gopivotal.manager/redis-store"
   database: 0
   timeout: 2000
   connection_pool_size: 2
