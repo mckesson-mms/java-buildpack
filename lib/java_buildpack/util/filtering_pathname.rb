@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -148,8 +147,8 @@ module JavaBuildpack
 
       private
 
-      MUTATORS = [:chmod, :chown, :delete, :lchmod, :lchown, :make_link, :make_symlink, :mkdir, :mkpath, :rename,
-                  :rmdir, :rmtree, :taint, :unlink, :untaint].to_set.freeze
+      MUTATORS = %i[chmod chown delete lchmod lchown make_link make_symlink mkdir mkpath rename rmdir rmtree taint
+                    unlink untaint].to_set.freeze
 
       private_constant :MUTATORS
 
@@ -198,14 +197,14 @@ module JavaBuildpack
 
       def method_missing(method, *args)
         check_mutable if MUTATORS.member? method
-        if block_given?
-          result = delegate.send(method, *args) do |*values|
-            converted_values = values.map { |value| convert_if_necessary(value) }.compact
-            yield(*converted_values) unless converted_values.empty?
-          end
-        else
-          result = delegate.send(method, *args)
-        end
+        result = if block_given?
+                   delegate.send(method, *args) do |*values|
+                     converted_values = values.map { |value| convert_if_necessary(value) }.compact
+                     yield(*converted_values) unless converted_values.empty?
+                   end
+                 else
+                   delegate.send(method, *args)
+                 end
         convert_result_if_necessary(result)
       end
 

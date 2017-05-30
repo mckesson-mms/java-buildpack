@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -50,10 +49,10 @@ module JavaBuildpack
         download_tar
         @droplet.copy_resources
 
-        unless @droplet.java_home.java_8_or_later?
-          $stderr.puts "\n       WARNING: You are using #{@droplet.java_home.version}. Oracle has ended public " \
-                       "updates of Java 1.7 as of April 2015, possibly rendering your application vulnerable.\n\n"
-        end
+        return if @droplet.java_home.java_8_or_later?
+
+        $stderr.puts "\n       WARNING: You are using #{@droplet.java_home.version}. Oracle has ended public " \
+                     "updates of Java 1.7 as of April 2015, possibly rendering your application vulnerable.\n\n"
       end
 
       # (see JavaBuildpack::Component::BaseComponent#release)
@@ -61,13 +60,6 @@ module JavaBuildpack
         @droplet
           .java_opts
           .add_system_property('java.io.tmpdir', '$TMPDIR')
-          .add_option('-XX:OnOutOfMemoryError', killjava)
-      end
-
-      private
-
-      def killjava
-        @droplet.sandbox + 'bin/killjava.sh'
       end
 
     end

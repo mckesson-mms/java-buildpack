@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -51,7 +50,8 @@ module JavaBuildpack
         # (see JavaBuildpack::Component::BaseComponent#release)
         def release
           @droplet.java_opts.add_system_property 'http.port', '$PORT'
-          @droplet.environment_variables.add_environment_variable 'PATH', "#{@droplet.java_home.root}/bin:$PATH"
+          @droplet.environment_variables
+                  .add_environment_variable 'PATH', "#{qualify_path(@droplet.java_home.root, @droplet.root)}/bin:$PATH"
 
           [
             @droplet.environment_variables.as_env_vars,

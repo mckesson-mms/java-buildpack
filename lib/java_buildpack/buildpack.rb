@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -20,9 +19,11 @@ require 'java_buildpack/component/additional_libraries'
 require 'java_buildpack/component/application'
 require 'java_buildpack/component/droplet'
 require 'java_buildpack/component/environment_variables'
+require 'java_buildpack/component/extension_directories'
 require 'java_buildpack/component/immutable_java_home'
 require 'java_buildpack/component/java_opts'
 require 'java_buildpack/component/mutable_java_home'
+require 'java_buildpack/component/security_providers'
 require 'java_buildpack/logging/logger_factory'
 require 'java_buildpack/util/configuration_utils'
 require 'java_buildpack/util/constantize'
@@ -62,6 +63,7 @@ module JavaBuildpack
 
       component_detection('JRE', @jres, true).first.compile
       component_detection('framework', @frameworks, false).each(&:compile)
+
       container.compile
     end
 
@@ -75,9 +77,10 @@ module JavaBuildpack
 
       commands = []
       commands << component_detection('JRE', @jres, true).first.release
-      component_detection('framework', @frameworks, false).map(&:release)
-      commands << container.release
 
+      component_detection('framework', @frameworks, false).map(&:release)
+
+      commands << container.release
       command = commands.flatten.compact.join(' && ')
 
       payload = {
@@ -112,11 +115,13 @@ module JavaBuildpack
       immutable_java_home = Component::ImmutableJavaHome.new mutable_java_home, app_dir
 
       component_info = {
-        'additional_libraries' => Component::AdditionalLibraries.new(app_dir),
-        'application'          => application,
-        'env_vars'             => Component::EnvironmentVariables.new(app_dir),
-        'java_opts'            => Component::JavaOpts.new(app_dir),
-        'app_dir'              => app_dir
+        'additional_libraries'  => Component::AdditionalLibraries.new(app_dir),
+        'app_dir'               => app_dir,
+        'application'           => application,
+        'env_vars'              => Component::EnvironmentVariables.new(app_dir),
+        'extension_directories' => Component::ExtensionDirectories.new(app_dir),
+        'java_opts'             => Component::JavaOpts.new(app_dir),
+        'security_providers'    => Component::SecurityProviders.new
       }
 
       instantiate_components(mutable_java_home, immutable_java_home, component_info)
@@ -164,8 +169,9 @@ module JavaBuildpack
           application:   component_info['application'],
           configuration: Util::ConfigurationUtils.load(component_id),
           droplet:       Component::Droplet.new(component_info['additional_libraries'], component_id,
-                                                component_info['env_vars'], java_home,
-                                                component_info['java_opts'], component_info['app_dir'])
+                                                component_info['env_vars'], component_info['extension_directories'],
+                                                java_home, component_info['java_opts'], component_info['app_dir'],
+                                                component_info['security_providers'])
         }
         component.constantize.new(context)
       end
@@ -189,7 +195,7 @@ module JavaBuildpack
     end
 
     def no_container
-      raise 'No container can run this application. Please ensure that you’ve pushed a valid JVM artifact or ' \
+      raise 'No container can run this application. Please ensure that you\'ve pushed a valid JVM artifact or ' \
             'artifacts using the -p command line argument or path manifest entry. Information about valid JVM ' \
             'artifacts can be found at https://github.com/cloudfoundry/java-buildpack#additional-documentation. '
     end

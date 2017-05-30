@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -72,7 +71,7 @@ describe JavaBuildpack::Util::Cache::DownloadCache do
       .to_return(status: 200, body: 'foo-cached', headers: { Etag: 'foo-etag', 'Last-Modified' => 'foo-last-modified' })
 
     allow(Net::HTTP).to receive(:Proxy).and_call_original
-    expect(Net::HTTP).not_to receive(:Proxy).with('proxy', 9000, nil, nil)
+    expect(Net::HTTP).not_to have_received(:Proxy).with('proxy', 9000, nil, nil)
 
     expect { |b| download_cache.get uri, &b }.to yield_file_with_content(/foo-cached/)
     expect_complete_cache mutable_cache_root
@@ -84,7 +83,7 @@ describe JavaBuildpack::Util::Cache::DownloadCache do
       .to_return(status: 200, body: 'foo-cached', headers: { Etag: 'foo-etag', 'Last-Modified' => 'foo-last-modified' })
 
     allow(Net::HTTP).to receive(:Proxy).and_call_original
-    expect(Net::HTTP).not_to receive(:Proxy).with('proxy', 9000, nil, nil)
+    expect(Net::HTTP).not_to have_received(:Proxy).with('proxy', 9000, nil, nil)
 
     expect { |b| download_cache.get uri_credentials, &b }.to yield_file_with_content(/foo-cached/)
     expect_complete_cache mutable_cache_root

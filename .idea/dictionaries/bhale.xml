@@ -8,6 +8,7 @@
       <w>argv</w>
       <w>atpack</w>
       <w>bootclasspath</w>
+      <w>buildpack</w>
       <w>cacert</w>
       <w>chrystoki</w>
       <w>cklog</w>
@@ -21,6 +22,7 @@
       <w>dirname</w>
       <w>distapplication</w>
       <w>dnewrelic</w>
+      <w>dotmatch</w>
       <w>enterprisemanager</w>
       <w>etag</w>
       <w>extname</w>
@@ -61,6 +63,7 @@
       <w>myhost</w>
       <w>mypass</w>
       <w>myuser</w>
+      <w>newrelic</w>
       <w>newrelicagent</w>
       <w>overweaving</w>
       <w>pathnames</w>

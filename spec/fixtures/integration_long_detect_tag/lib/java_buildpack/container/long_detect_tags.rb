@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -29,12 +28,10 @@ module JavaBuildpack
       end
 
       # (see JavaBuildpack::Component::BaseComponent#compile)
-      def compile
-      end
+      def compile; end
 
       # (see JavaBuildpack::Component::BaseComponent#release)
-      def release
-      end
+      def release; end
 
     end
 

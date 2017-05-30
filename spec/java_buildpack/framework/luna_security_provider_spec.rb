@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -48,10 +47,10 @@ describe JavaBuildpack::Framework::LunaSecurityProvider do
           'groups' => [
             {
               'label'   => 'test-group-1',
-              'members' => %w(test-group-1-member-1 test-group-1-member-2)
+              'members' => %w[test-group-1-member-1 test-group-1-member-2]
             }, {
               'label'   => 'test-group-2',
-              'members' => %w(test-group-2-member-1 test-group-2-member-2)
+              'members' => %w[test-group-2-member-1 test-group-2-member-2]
             }
           ]
         }
@@ -68,7 +67,6 @@ describe JavaBuildpack::Framework::LunaSecurityProvider do
       component.compile
 
       expect(sandbox + 'Chrystoki.conf').to exist
-      expect(sandbox + 'java.security').to exist
     end
 
     it 'unpacks the luna tar',
@@ -113,12 +111,17 @@ describe JavaBuildpack::Framework::LunaSecurityProvider do
       expect(environment_variables).to include('ChrystokiConfigurationPath=$PWD/.java-buildpack/luna_security_provider')
     end
 
-    it 'updates JAVA_OPTS' do
+    it 'adds security provider',
+       cache_fixture: 'stub-luna-security-provider.tar' do
+
+      component.compile
+      expect(security_providers).to include('com.safenetinc.luna.provider.LunaProvider')
+    end
+
+    it 'adds extension directory' do
       component.release
-      expect(java_opts).to include('-Djava.security.properties=$PWD/.java-buildpack/' \
-                                   'luna_security_provider/java.security')
-      expect(java_opts).to include('-Djava.ext.dirs=$PWD/.test-java-home/lib/ext:$PWD/.java-buildpack/' \
-                                   'luna_security_provider/ext')
+
+      expect(extension_directories).to include(droplet.sandbox + 'ext')
     end
 
     context do

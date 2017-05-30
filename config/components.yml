@@ -35,14 +35,14 @@ jres:
 
 # Frameworks are processed in order. Any Java Opts added by the JavaOpts framework will be specified in the start
 # command after any Java Opts added by previous frameworks.
-
 frameworks:
-# - "JavaBuildpack::Framework::AppDynamicsAgent"
-  - "JavaBuildpack::Framework::ContainerCertificateTrustStore"
+  - "JavaBuildpack::Framework::AppDynamicsAgent"
   - "JavaBuildpack::Framework::ContainerCustomizer"
+  - "JavaBuildpack::Framework::ContainerSecurityProvider"
   - "JavaBuildpack::Framework::Debug"
   - "JavaBuildpack::Framework::DynatraceAppmonAgent"
   - "JavaBuildpack::Framework::DynatraceOneAgent"
+  - "JavaBuildpack::Framework::GoogleStackdriverDebugger"
 # - "JavaBuildpack::Framework::IntroscopeAgent"
   - "JavaBuildpack::Framework::Jmx"
   - "JavaBuildpack::Framework::JrebelAgent"
@@ -57,4 +57,5 @@ frameworks:
   - "JavaBuildpack::Framework::SpringAutoReconfiguration"
   - "JavaBuildpack::Framework::SpringInsight"
   - "JavaBuildpack::Framework::YourKitProfiler"
+  - "JavaBuildpack::Framework::SecurityProviders"
   - "JavaBuildpack::Framework::JavaOpts"

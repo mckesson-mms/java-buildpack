@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -33,6 +32,10 @@ describe JavaBuildpack::Component::Droplet do
     expect(droplet.component_id).to eq(component_id)
   end
 
+  it 'returns extension_directories' do
+    expect(droplet.extension_directories).to equal(extension_directories)
+  end
+
   it 'returns java_home' do
     expect(droplet.java_home).to equal(java_home)
   end
@@ -43,6 +46,10 @@ describe JavaBuildpack::Component::Droplet do
 
   it 'returns environment_variables' do
     expect(droplet.environment_variables).to equal(environment_variables)
+  end
+
+  it 'returns security_providers' do
+    expect(droplet.security_providers).to equal(security_providers)
   end
 
   it 'returns an existent child if in application' do

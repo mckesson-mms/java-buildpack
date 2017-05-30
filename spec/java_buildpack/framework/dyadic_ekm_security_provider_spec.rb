@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -48,14 +47,6 @@ describe JavaBuildpack::Framework::DyadicEkmSecurityProvider do
       expect(component.detect).to eq("dyadic-ekm-security-provider=#{version}")
     end
 
-    it 'copies resources',
-       cache_fixture: 'stub-dyadic-ekm-security-provider.tar.gz' do
-
-      component.compile
-
-      expect(sandbox + 'java.security').to exist
-    end
-
     it 'unpacks the dyadic tar',
        cache_fixture: 'stub-dyadic-ekm-security-provider.tar.gz' do
 
@@ -95,12 +86,18 @@ describe JavaBuildpack::Framework::DyadicEkmSecurityProvider do
                                                'dyadic_ekm_security_provider/usr/lib')
     end
 
-    it 'updates JAVA_OPTS' do
+    it 'adds security provider',
+       cache_fixture: 'stub-dyadic-ekm-security-provider.tar.gz' do
+
+      component.compile
+
+      expect(security_providers).to include('com.dyadicsec.provider.DYCryptoProvider')
+    end
+
+    it 'adds extension directory' do
       component.release
-      expect(java_opts).to include('-Djava.ext.dirs=$PWD/.test-java-home/lib/ext:$PWD/.java-buildpack/' \
-                                   'dyadic_ekm_security_provider/ext')
-      expect(java_opts).to include('-Djava.security.properties=$PWD/.java-buildpack/' \
-                                   'dyadic_ekm_security_provider/java.security')
+
+      expect(extension_directories).to include(droplet.sandbox + 'ext')
     end
 
     def check_file_contents(actual, expected)

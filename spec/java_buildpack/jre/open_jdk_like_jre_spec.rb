@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -43,32 +42,11 @@ describe JavaBuildpack::Jre::OpenJDKLikeJre do
     expect(java_home.root).to eq(sandbox)
   end
 
-  it 'adds OnOutOfMemoryError to java_opts' do
-    component.detect
-    component.release
-
-    expect(java_opts).to include('-XX:OnOutOfMemoryError=$PWD/.java-buildpack/open_jdk_like_jre/bin/killjava.sh')
-  end
-
   it 'adds java.io.tmpdir to java_opts' do
     component.detect
     component.release
 
     expect(java_opts).to include('-Djava.io.tmpdir=$TMPDIR')
-  end
-
-  context do
-
-    let(:component_id) { 'open_jdk_jre' }
-
-    it 'places the killjava script (with appropriately substituted content) in the bin directory',
-       cache_fixture: 'stub-java.tar.gz' do
-
-      component.detect
-      component.compile
-
-      expect(sandbox + 'bin/killjava.sh').to exist
-    end
   end
 
 end

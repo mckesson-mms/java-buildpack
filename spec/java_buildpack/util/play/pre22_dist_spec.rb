@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -89,22 +88,22 @@ describe JavaBuildpack::Util::Play::Pre22Dist do
     it 'adds additional libraries to lib directory of a Play 2.0 dist application' do
       play_app.compile
 
-      lib_dir    = app_dir + 'application-root/lib'
-      test_jar_1 = lib_dir + 'test-jar-1.jar'
-      test_jar_2 = lib_dir + 'test-jar-2.jar'
+      lib_dir   = app_dir + 'application-root/lib'
+      test_jar1 = lib_dir + 'test-jar-1.jar'
+      test_jar2 = lib_dir + 'test-jar-2.jar'
 
-      expect(test_jar_1).to exist
-      expect(test_jar_1).to be_symlink
-      expect(test_jar_1.readlink).to eq((additional_libs_directory + 'test-jar-1.jar').relative_path_from(lib_dir))
+      expect(test_jar1).to exist
+      expect(test_jar1).to be_symlink
+      expect(test_jar1.readlink).to eq((additional_libs_directory + 'test-jar-1.jar').relative_path_from(lib_dir))
 
-      expect(test_jar_2).to exist
-      expect(test_jar_2).to be_symlink
-      expect(test_jar_2.readlink).to eq((additional_libs_directory + 'test-jar-2.jar').relative_path_from(lib_dir))
+      expect(test_jar2).to exist
+      expect(test_jar2).to be_symlink
+      expect(test_jar2.readlink).to eq((additional_libs_directory + 'test-jar-2.jar').relative_path_from(lib_dir))
     end
 
     it 'returns command' do
-      expect(play_app.release).to eq("test-var-2 test-var-1 PATH=#{java_home.root}/bin:$PATH #{java_home.as_env_var} " \
-      'exec $PWD/application-root/start test-opt-2 test-opt-1 -Dhttp.port=$PORT')
+      expect(play_app.release).to eq('test-var-2 test-var-1 PATH=$PWD/.test-java-home/bin:$PATH ' \
+      "#{java_home.as_env_var} exec $PWD/application-root/start test-opt-2 test-opt-1 -Dhttp.port=$PORT")
     end
   end
 
@@ -124,8 +123,8 @@ describe JavaBuildpack::Util::Play::Pre22Dist do
     end
 
     it 'returns command' do
-      expect(play_app.release).to eq("test-var-2 test-var-1 PATH=#{java_home.root}/bin:$PATH #{java_home.as_env_var} " \
-      'exec $PWD/application-root/start test-opt-2 test-opt-1 -Dhttp.port=$PORT')
+      expect(play_app.release).to eq('test-var-2 test-var-1 PATH=$PWD/.test-java-home/bin:$PATH ' \
+      "#{java_home.as_env_var} exec $PWD/application-root/start test-opt-2 test-opt-1 -Dhttp.port=$PORT")
     end
 
   end

@@ -1,4 +1,3 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
 # Copyright 2013-2017 the original author or authors.
 #
@@ -31,13 +30,7 @@ module JavaBuildpack
       end
 
       # (see JavaBuildpack::Component::BaseComponent#compile)
-      def compile
-        parsed_java_opts.each do |option|
-          if memory_option? option
-            raise "Java option '#{option}' configures a memory region.  Use JRE configuration for this instead."
-          end
-        end
-      end
+      def compile; end
 
       # (see JavaBuildpack::Component::BaseComponent#release)
       def release
@@ -53,11 +46,6 @@ module JavaBuildpack
       ENVIRONMENT_VARIABLE = 'JAVA_OPTS'.freeze
 
       private_constant :CONFIGURATION_PROPERTY, :ENVIRONMENT_PROPERTY, :ENVIRONMENT_VARIABLE
-
-      def memory_option?(option)
-        option =~ /-Xms/ || option =~ /-Xmx/ || option =~ /-XX:MaxMetaspaceSize/ || option =~ /-XX:MaxPermSize/ ||
-          option =~ /-Xss/ || option =~ /-XX:MetaspaceSize/ || option =~ /-XX:PermSize/
-      end
 
       def parsed_java_opts
         parsed_java_opts = []

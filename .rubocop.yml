@@ -3,13 +3,16 @@ require: rubocop-rspec
 
 AllCops:
   Include:
-    - '**/Rakefile'
-    - 'rakelib/**/*'
+  - '**/Rakefile'
+  - 'rakelib/**/*'
   Exclude:
-    - 'build/**/*'
-    - 'vendor/**/*'
+  - 'build/**/*'
+  - Gemfile            # TODO: Remove when upgrading to any version after 0.48.1
 Metrics/AbcSize:
  Max: 22
+Metrics/BlockLength:
+  Exclude:
+  - 'spec/**/*.rb'
 Metrics/ClassLength:
   Max: 250
 Metrics/CyclomaticComplexity:
@@ -19,27 +22,31 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 18
 Metrics/ParameterLists:
-  Max: 6
+  Max: 8
 Metrics/PerceivedComplexity:
   Max: 10
 RSpec/ExampleLength:
   Max: 20
 RSpec/AnyInstance:
   Enabled: false
+RSpec/ExpectOutput:
+  Enabled: false
 RSpec/FilePath:
   Enabled: false
 RSpec/MultipleExpectations:
   Enabled: false
 RSpec/NestedGroups:
-  MaxNesting: 4
+  Max: 4
 Style/Documentation:
   Enabled: false
 Style/EmptyLinesAroundBlockBody:
   Exclude:
-    - 'spec/**/*'
+  - 'spec/**/*.rb'
 Style/EmptyLinesAroundClassBody:
   Enabled: false
 Style/EmptyLinesAroundModuleBody:
+  Enabled: false
+Style/IndentHeredoc:  # TODO: Remove when dropping 2.2.x support
   Enabled: false
 Style/MethodMissing:
   Enabled: false
