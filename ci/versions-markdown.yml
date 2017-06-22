@@ -12,12 +12,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# JMX configuration
 ---
-version: 2017.+
-repository_root: https://download.run.pivotal.io/your-kit/{platform}/{architecture}
-enabled: false
-port: 10001
-default_session_name: $(ruby -e "require 'json' ; a = JSON.parse(ENV['VCAP_APPLICATION']);
-  puts \"#{a['application_name']}:#{a['instance_index']}\"")
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: cfje/java-buildpack
+
+inputs:
+- name: java-buildpack
+
+run:
+  path: java-buildpack/ci/versions-markdown.sh

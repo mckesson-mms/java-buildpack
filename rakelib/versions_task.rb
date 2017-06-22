@@ -19,7 +19,6 @@ require 'java_buildpack/logging/logger_factory'
 require 'java_buildpack/repository/version_resolver'
 require 'java_buildpack/util/configuration_utils'
 require 'java_buildpack/util/cache/download_cache'
-require 'json'
 require 'rake/tasklib'
 require 'rakelib/package'
 require 'terminal-table'
@@ -36,7 +35,8 @@ module Package
       version_task
 
       namespace 'versions' do
-        version_json_task
+        version_markdown_task
+        version_pivotal_network_task
         version_yaml_task
       end
     end
@@ -52,6 +52,7 @@ module Package
       'app_dynamics_agent'                  => 'AppDynamics Agent',
       'container_customizer'                => 'Spring Boot Container Customizer',
       'container_security_provider'         => 'Container Security Provider',
+      'contrast_security_agent'             => 'Contrast Security Agent',
       'dyadic_ekm_security_provider'        => 'Dyadic EKM Security Provider',
       'dynatrace_appmon_agent'              => 'Dynatrace Appmon Agent',
       'dynatrace_one_agent'                 => 'Dynatrace OneAgent',
@@ -65,6 +66,7 @@ module Package
       'luna_security_provider'              => 'Gemalto Luna Security Provider',
       'maria_db_jdbc'                       => 'MariaDB JDBC Driver',
       'memory_calculator'                   => 'Memory Calculator',
+      'metric_writer'                       => 'Metric Writer',
       'new_relic_agent'                     => 'New Relic Agent',
       'play_framework_auto_reconfiguration' => 'Play Framework Auto-reconfiguration',
       'play_framework_jpa_plugin'           => 'Play Framework JPA Plugin',
@@ -210,7 +212,7 @@ module Package
     def version_task
       desc 'Display the versions of buildpack dependencies in human readable form'
       task versions: [] do
-        v    = versions
+        v = versions
 
         rows = v['dependencies']
                .sort_by { |dependency| dependency['name'].downcase }
@@ -220,10 +222,21 @@ module Package
       end
     end
 
-    def version_json_task
-      desc 'Display the versions of buildpack dependencies in JSON form'
-      task json: [] do
-        puts JSON.pretty_generate(versions)
+    def version_markdown_task
+      desc 'Display the versions of buildpack dependencies in Markdown form'
+      task markdown: [] do
+        versions['dependencies']
+          .sort_by { |dependency| dependency['name'].downcase }
+          .each { |dependency| puts "| #{dependency['name']} | `#{dependency['version']}` |" }
+      end
+    end
+
+    def version_pivotal_network_task
+      desc 'Display the versions of buildpack dependencies in Pivotal Network form'
+      task pivotal_network: [] do
+        versions['dependencies']
+          .sort_by { |dependency| dependency['name'].downcase }
+          .each { |dependency| puts "#{dependency['name']} #{dependency['version']}" }
       end
     end
 
