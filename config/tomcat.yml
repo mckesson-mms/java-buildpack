@@ -16,7 +16,7 @@
 # Configuration for the Tomcat container
 ---
 tomcat:
-  version: 8.5.+
+  version: 7.+
   repository_root: "{default.repository.root}/tomcat"
   context_path: 
   external_configuration_enabled: false
@@ -34,7 +34,7 @@ access_logging_support:
   repository_root: "{default.repository.root}/tomcat-access-logging-support"
   access_logging: disabled
 redis_store:
-  version: 1.+
+  version: 1.2.+
   repository_root: "{default.repository.root}/redis-store"
   database: 0
   timeout: 2000
